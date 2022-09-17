@@ -37,7 +37,11 @@ router.get('/:id', async (req, res) => {
       include: [{ model: Product }]
     })
 
-    res.json(idData)
+    if(idData){
+      res.json(idData)
+    } else {
+      res.status(404).json({errorMessage: 'No data found'})
+    }
 
   } catch(err) {
     res.status(500).json(err);
@@ -64,7 +68,7 @@ router.put('/:id', async (req, res) => {
         id: req.params.id
       }
     })
-    res.json(updatedCategory)
+    res.json({"action": "updated", "content": req.body})
 
   } catch(err) {
     res.json(err);
@@ -80,7 +84,7 @@ router.delete('/:id', async (req, res) => {
         id: req.params.id
       }
     })
-    res.json(deletedCategory)
+    res.json({"action": "deleted", "item": req.params.id})
 
   } catch(err){
     res.status(500).json(err);
