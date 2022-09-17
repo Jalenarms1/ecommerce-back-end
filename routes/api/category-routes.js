@@ -37,10 +37,11 @@ router.get('/:id', async (req, res) => {
       include: [{ model: Product }]
     })
 
+
     if(idData){
       res.json(idData)
     } else {
-      res.status(404).json({errorMessage: 'No data found'})
+      res.status(400).json({errorMessage: 'Invalid request'})
     }
 
   } catch(err) {
@@ -63,12 +64,19 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   // update a category by its `id` value
   try{
-    let updatedCategory = await Category.update(req.body, {
-      where: {
-        id: req.params.id
-      }
-    })
-    res.json({"action": "updated", "content": req.body})
+    let findId = await Tag.findByPk(req.params.id)
+
+    if(findId){
+      let updatedCategory = await Category.update(req.body, {
+        where: {
+          id: req.params.id
+        }
+      })
+      res.json({"action": "updated", "content": req.body})
+
+    }else {
+      res.status(400).json({errorMessage: "Invalid entry"})
+    }
 
   } catch(err) {
     res.json(err);

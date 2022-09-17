@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
     if(oneProduct){
       res.json(oneProduct)
     } else{
-      res.status(404).json({"errorMessage": "No data found"})
+      res.status(400).json({"errorMessage": "No data found"})
     }
   } catch (err) {
     res.json(err)
