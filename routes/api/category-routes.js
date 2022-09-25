@@ -64,22 +64,16 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   // update a category by its `id` value
   try{
-    let findId = await Tag.findByPk(req.params.id)
-
-    if(findId){
-      let updatedCategory = await Category.update(req.body, {
-        where: {
-          id: req.params.id
-        }
-      })
-      res.json({"action": "updated", "content": req.body})
-
-    }else {
-      res.status(400).json({errorMessage: "Invalid entry"})
-    }
+    let updatedCategory = await Category.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    })
+    res.json({"action": "updated", "content": req.body, "fields": updatedCategory})
+  
 
   } catch(err) {
-    res.json(err);
+    res.status(500).json(err);
   }
 
 });
@@ -87,15 +81,23 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
   try{
+    let deletedProducts = await Product.destroy({
+      where: {
+        category_id: req.params.id
+      }
+    })
+    console.log(deletedProducts);
     let deletedCategory = await Category.destroy({
       where: {
         id: req.params.id
       }
     })
-    res.json({"action": "deleted", "item": req.params.id})
+    console.log(deletedCategory);
+    res.json({"action": "deleted", "item": req.params.id, "fields": deletedCategory})
 
   } catch(err){
     res.status(500).json(err);
+    console.log(err);
   }
 });
 
